@@ -4,15 +4,14 @@ import { useState } from "react";
 import Email from "../icons/email";
 import Password from "../icons/pwd";
 
-const CreateAccount = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
-  const [errors, setErrors] = useState({}); // Track validation errors
+  const [errors, setErrors] = useState({}); // To track validation errors
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +23,7 @@ const CreateAccount = () => {
   };
 
   const validateForm = (data) => {
-    const { email, password, confirmPassword } = data;
+    const { email, password } = data;
     let newErrors = {};
 
     // Email validation
@@ -32,18 +31,14 @@ const CreateAccount = () => {
       newErrors.email = "Email can't be empty";
     }
 
-    // Password validation (must be at least 8 characters)
+    // Password validation (minimum 8 characters)
     if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = "Check again";
     }
 
-    // Confirm Password validation (must match password)
-    if (confirmPassword && password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
     setErrors(newErrors);
 
-    // If there are no errors, set the form as valid
+    // Form is valid if there are no errors
     if (Object.keys(newErrors).length === 0) {
       setIsFormValid(true);
     } else {
@@ -53,7 +48,7 @@ const CreateAccount = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Submit form logic
+    // Form submission logic
     if (isFormValid) {
       console.log("Form Submitted", formData);
     } else {
@@ -77,9 +72,9 @@ const CreateAccount = () => {
         </div>
 
         <div className="text-left mb-6">
-          <h2 className="text-3xl font-bold mb-2">Create an Account</h2>
+          <h2 className="text-3xl font-bold mb-2">Login</h2>
           <p className="text-default-gray">
-            Let&apos;s get you started sharing your links!{" "}
+            Add your details below to get back into the app
           </p>
         </div>
 
@@ -95,7 +90,7 @@ const CreateAccount = () => {
               <input
                 type="email"
                 name="email"
-                placeholder="e.g. alex@gmail.com"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-10 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
@@ -104,7 +99,7 @@ const CreateAccount = () => {
                     : "border-gray-300 focus:ring-active-purple"
                 }`}
               />
-              {/* Error Message inside the input box aligned to the right */}
+              {/* Error Message aligned to the right */}
               {errors.email && (
                 <span className="absolute right-3 text-default-red text-xs">
                   {errors.email}
@@ -123,7 +118,7 @@ const CreateAccount = () => {
               <input
                 type="password"
                 name="password"
-                placeholder="Enter at least 8 characters"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-10 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
@@ -132,38 +127,10 @@ const CreateAccount = () => {
                     : "border-gray-300 focus:ring-active-purple"
                 }`}
               />
-              {/* Error Message inside the input box aligned to the right */}
+              {/* Error Message aligned to the right */}
               {errors.password && (
                 <span className="absolute right-3 text-default-red text-xs">
                   {errors.password}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Confirm Password Input */}
-          <div className="relative">
-            <label className="block text-gray-700">Confirm Password</label>
-            <div className="flex items-center relative">
-              <span className="absolute left-3 text-gray-400">
-                <Password />
-              </span>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`w-full pl-10 pr-10 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.confirmPassword
-                    ? "border-default-red focus:ring-default-red"
-                    : "border-gray-300 focus:ring-active-purple"
-                }`}
-              />
-              {/* Error Message inside the input box aligned to the right */}
-              {errors.confirmPassword && (
-                <span className="absolute right-3 text-default-red text-xs">
-                  {errors.confirmPassword}
                 </span>
               )}
             </div>
@@ -180,7 +147,7 @@ const CreateAccount = () => {
                   : "bg-disabled-purple cursor-not-allowed"
               }`}
             >
-              Create Account
+              Login
             </button>
           </div>
         </form>
@@ -189,4 +156,4 @@ const CreateAccount = () => {
   );
 };
 
-export default CreateAccount;
+export default Login;
