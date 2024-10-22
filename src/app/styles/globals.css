@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Jost", sans-serif;
+  overflow: hidden;
+  max-width: 100vw;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #633cff;
+  border-radius: 10rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #333333;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden !important;
+}
+
+input,
+button {
+  appearance: none;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: inherit;
+  font-family: "Jost", sans-serif;
+}
+select {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: inherit;
+  font-family: "Jost", sans-serif;
+}
+
+textarea {
+  font-family: "Jost", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-family: "Jost", sans-serif;
+}
+
+input[type="checkbox"] {
+  appearance: auto;
+  width: 2em;
+  opacity: 1;
+}
