@@ -24,7 +24,6 @@ module.exports = {
         "phone-sm": "375px",
         "phone-md": "400px",
         "phone-lg": "480px",
-        maxMd: { raw: "(max-width: 768px)" },
         md: "768px",
         lg: "1024px",
         xl: "1280px",

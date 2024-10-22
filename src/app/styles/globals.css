@@ -32,17 +32,17 @@ html {
 
 input,
 button {
-  appearance: none;
+  /* appearance: none;
   background: none;
   border: none;
-  outline: none;
+  outline: none; */
   font-size: inherit;
   font-family: "Jost", sans-serif;
 }
 select {
-  background: none;
+  /* background: none;
   border: none;
-  outline: none;
+  outline: none; */
   font-size: inherit;
   font-family: "Jost", sans-serif;
 }
