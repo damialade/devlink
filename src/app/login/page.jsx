@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import Email from "../icons/email";
-import Password from "../icons/pwd";
+import Email from "../components/icons/email";
+import Password from "../components/icons/pwd";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -141,7 +141,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={!isFormValid}
-              className={`w-full py-2 px-4 text-white font-bold rounded-lg border-radius-[10px] ${
+              className={`w-full py-2 px-4 text-white font-bold rounded-lg ${
                 isFormValid
                   ? "bg-default-purple hover:bg-active-purple"
                   : "bg-disabled-purple cursor-not-allowed"

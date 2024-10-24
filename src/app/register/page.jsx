@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import Email from "../icons/email";
-import Password from "../icons/pwd";
+import Email from "../components/icons/email";
+import Password from "../components/icons/pwd";
 
 const CreateAccount = () => {
   const [formData, setFormData] = useState({
@@ -104,7 +104,6 @@ const CreateAccount = () => {
                     : "border-gray-300 focus:ring-active-purple"
                 }`}
               />
-              {/* Error Message inside the input box aligned to the right */}
               {errors.email && (
                 <span className="absolute right-3 text-default-red text-xs">
                   {errors.email}
@@ -132,7 +131,6 @@ const CreateAccount = () => {
                     : "border-gray-300 focus:ring-active-purple"
                 }`}
               />
-              {/* Error Message inside the input box aligned to the right */}
               {errors.password && (
                 <span className="absolute right-3 text-default-red text-xs">
                   {errors.password}
@@ -160,7 +158,6 @@ const CreateAccount = () => {
                     : "border-gray-300 focus:ring-active-purple"
                 }`}
               />
-              {/* Error Message inside the input box aligned to the right */}
               {errors.confirmPassword && (
                 <span className="absolute right-3 text-default-red text-xs">
                   {errors.confirmPassword}
@@ -174,7 +171,7 @@ const CreateAccount = () => {
             <button
               type="submit"
               disabled={!isFormValid}
-              className={`w-full py-2 px-4 text-white font-bold rounded-lg border-radius-[10px] ${
+              className={`w-full py-2 px-4 text-white font-bold rounded-lg ${
                 isFormValid
                   ? "bg-default-purple hover:bg-active-purple"
                   : "bg-disabled-purple cursor-not-allowed"
