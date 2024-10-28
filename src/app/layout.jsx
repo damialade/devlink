@@ -25,18 +25,7 @@ export default function RootLayout({ children }) {
           sizes="16x16"
           href="/images/favicon/favicon-16x16.png"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="192x192"
-          href="android-chrome-192x192.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="512x512"
-          href="android-chrome-512x512.png"
-        />
+
         <link
           rel="apple-touch-icon"
           sizes="180x180"
