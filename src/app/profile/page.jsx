@@ -9,7 +9,6 @@ export const metadata = {
 const Profile = () => {
   return (
     <div>
-      <Navbar />
       <ProfileForm />
     </div>
   );
