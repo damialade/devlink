@@ -8,8 +8,13 @@ import Link from "next/link";
 import LinkPurple from "../icons/linkpurple";
 import Profile from "../icons/profile";
 import Eye from "../icons/eye";
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
 
 const ProfileForm = () => {
+  const router = useRouter();
+
   const {
     register,
     watch,
@@ -74,7 +79,7 @@ const ProfileForm = () => {
             <div
               className={`flex items-center space-x-2 cursor-pointer ${
                 activeSection === "links"
-                  ? "bg-active-purple text-default-purple rounded-lg py-2 px-6"
+                  ? "bg-active-purple text-default-purple rounded-lg py-2 px-2 md:px-3 lg:px-6"
                   : "hover:bg-disabled-purple text-default-purple"
               } hover:rounded-lg hover:py-2 hover:px-6`}
               onClick={() => setActiveSection("links")}
@@ -85,7 +90,7 @@ const ProfileForm = () => {
             <div
               className={`flex items-center space-x-2 cursor-pointer ${
                 activeSection === "profile"
-                  ? "bg-active-purple text-default-purple rounded-lg py-2 px-6"
+                  ? "bg-active-purple text-default-purple rounded-lg py-2 px-2  md:px-3 lg:px-6"
                   : "hover:bg-disabled-purple text-default-purple"
               } hover:rounded-lg hover:py-2 hover:px-6`}
               onClick={() => setActiveSection("profile")}
@@ -97,19 +102,32 @@ const ProfileForm = () => {
             </div>
           </div>
 
-          {/* Preview Button */}
-          <div className="flex items-center border border-default-purple py-1 px-6 rounded-lg hover:bg-disabled-purple">
-            <Link
-              href="/preview"
-              className="text-app-dark text-lg hover:text-default-purple"
-            >
-              <span className="hidden md:block text-default-purple font-medium">
-                Preview
-              </span>
-              <div className="block md:hidden">
-                <Eye />
-              </div>
-            </Link>
+          <div className="flex space-x-3">
+            {/* Preview Button */}
+            <div className="flex items-center border border-default-purple py-1 px-2  md:px-3 lg:px-6 rounded-lg hover:bg-disabled-purple">
+              <Link href="/preview">
+                <span className="hidden md:block text-lg text-default-purple font-medium">
+                  Preview
+                </span>
+                <div className="block md:hidden">
+                  <Eye />
+                </div>
+              </Link>
+            </div>
+
+            {/* Logout Button */}
+            <div className="flex items-center border border-default-purple py-1 px-3 md:px-4 rounded-lg bg-default-purple hover:bg-disabled-purple">
+              <button
+                onClick={() => {
+                  signOut(auth);
+                  sessionStorage.removeItem("user");
+                  router.push("/login");
+                }}
+                className="block text-lg text-default-white hover:text-default-purple font-medium"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -265,7 +283,7 @@ const ProfileForm = () => {
 
               {/* Profile Picture Upload */}
               <div className="bg-gray-100 p-6 rounded-lg my-6">
-                <div className="flex justify-between items-center">
+                <div className="md:flex justify-between items-center">
                   <div className="flex flex-col items-center">
                     <div className="bg-purple-100 w-64 h-32 flex items-center justify-center rounded-lg">
                       <span className="text-purple-500 text-sm font-semibold">
@@ -273,7 +291,7 @@ const ProfileForm = () => {
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-2 text-center w-48">
+                  <p className="text-xs text-gray-500 mt-2 text-center md:w-48">
                     Image must be below 1024x1024px. Use PNG or JPG format.
                   </p>
                 </div>
