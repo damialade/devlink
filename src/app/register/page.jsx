@@ -1,8 +1,11 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Email from "../components/icons/email";
 import Password from "../components/icons/pwd";
+import { auth } from "../firebase/config";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useRouter } from "next/navigation";
 
 const CreateAccount = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +14,13 @@ const CreateAccount = () => {
     confirmPassword: "",
   });
 
+  const router = useRouter();
+  const [createUserWithEmailAndPassword, user, error] =
+    useCreateUserWithEmailAndPassword(auth);
+
   const [isFormValid, setIsFormValid] = useState(false);
-  const [errors, setErrors] = useState({}); // Track validation errors
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,9 +40,8 @@ const CreateAccount = () => {
       newErrors.email = "Email can't be empty";
     }
 
-    // Password validation (must be at least 8 characters)
     if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = "at least 8 characters";
     }
 
     // Confirm Password validation (must match password)
@@ -43,7 +50,6 @@ const CreateAccount = () => {
     }
     setErrors(newErrors);
 
-    // If there are no errors, set the form as valid
     if (Object.keys(newErrors).length === 0) {
       setIsFormValid(true);
     } else {
@@ -51,15 +57,40 @@ const CreateAccount = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit form logic
-    if (isFormValid) {
-      console.log("Form Submitted", formData);
-    } else {
-      validateForm(formData); // Revalidate if form is submitted without proper inputs
+
+    if (!isFormValid) {
+      validateForm(formData);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await createUserWithEmailAndPassword(formData.email, formData.password);
+      console.log("Account created successfully");
+      sessionStorage.setItem("user", true);
+      setFormData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setErrors({});
+      router.push("/login");
+    } catch (e) {
+      console.error("Error creating account:", e);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // Reset form
+  useEffect(() => {
+    if (user) {
+      setIsSubmitting(false);
+    }
+  }, [user]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -170,14 +201,14 @@ const CreateAccount = () => {
           <div>
             <button
               type="submit"
-              disabled={!isFormValid}
+              disabled={!isFormValid || isSubmitting}
               className={`w-full py-2 px-4 text-white font-bold rounded-lg ${
-                isFormValid
+                isFormValid && !isSubmitting
                   ? "bg-default-purple hover:bg-active-purple"
                   : "bg-disabled-purple cursor-not-allowed"
               }`}
             >
-              Create Account
+              {isSubmitting ? "Creating Account..." : "Create Account"}
             </button>
           </div>
         </form>

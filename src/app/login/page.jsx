@@ -3,6 +3,9 @@ import Image from "next/image";
 import { useState } from "react";
 import Email from "../components/icons/email";
 import Password from "../components/icons/pwd";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/config";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,9 +13,11 @@ const Login = () => {
     password: "",
   });
 
+  const router = useRouter();
+  const [signInWithEmailAndPassword, error] =
+    useSignInWithEmailAndPassword(auth);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [errors, setErrors] = useState({}); // To track validation errors
-
+  const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -31,14 +36,11 @@ const Login = () => {
       newErrors.email = "Email can't be empty";
     }
 
-    // Password validation (minimum 8 characters)
     if (password.length < 8) {
       newErrors.password = "Check again";
     }
-
     setErrors(newErrors);
 
-    // Form is valid if there are no errors
     if (Object.keys(newErrors).length === 0) {
       setIsFormValid(true);
     } else {
@@ -46,13 +48,26 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Form submission logic
-    if (isFormValid) {
-      console.log("Form Submitted", formData);
-    } else {
-      validateForm(formData); // Revalidate if form is submitted without proper inputs
+
+    if (!isFormValid) {
+      validateForm(formData);
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(formData.email, formData.password);
+      console.log("Login successful");
+      sessionStorage.setItem("user", true);
+      setFormData({
+        email: "",
+        password: "",
+      });
+      setErrors({});
+      router.push("/profile");
+    } catch (e) {
+      console.error("Error logging into account:", e);
     }
   };
 
@@ -151,6 +166,13 @@ const Login = () => {
             </button>
           </div>
         </form>
+
+        {/* Error message */}
+        {error && (
+          <p className="text-default-red text-sm mt-4">
+            {error.message || "Error creating account. Please try again."}
+          </p>
+        )}
       </div>
     </div>
   );
