@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Email from "../components/icons/email";
 import Password from "../components/icons/pwd";
+import Link from "next/link";
 import { auth } from "../firebase/config";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
@@ -15,7 +16,7 @@ const CreateAccount = () => {
   });
 
   const router = useRouter();
-  const [createUserWithEmailAndPassword, user, error] =
+  const [createUserWithEmailAndPassword, user, _, error] =
     useCreateUserWithEmailAndPassword(auth);
 
   const [isFormValid, setIsFormValid] = useState(false);
@@ -212,6 +213,20 @@ const CreateAccount = () => {
             </button>
           </div>
         </form>
+        {/* Error message */}
+        {error && (
+          <p className="text-default-red text-sm mt-4">
+            {error || "Problems Creating Account"}
+          </p>
+        )}
+        <div className="text-center my-4">
+          <p className="text-default-gray">
+            Already a user!{" "}
+            <Link href="/login">
+              <span className="text-default-purple">Sign In Here</span>
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

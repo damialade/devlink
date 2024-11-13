@@ -7,7 +7,7 @@ const platforms = [
   {
     name: "GitHub",
     value: "github",
-    icon: "images/github.svg",
+    icon: "/images/github.svg",
     pattern: /^https:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+$/,
   },
   {
@@ -19,55 +19,55 @@ const platforms = [
   {
     name: "Facebook",
     value: "facebook",
-    icon: "images/facebook.svg",
+    icon: "/images/facebook.svg",
     pattern: /^https:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "LinkedIn",
     value: "linkedin",
-    icon: "images/linkedin.svg",
+    icon: "/images/linkedin.svg",
     pattern: /^https:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "FreeCodeCamp",
     value: "freecodecamp",
-    icon: "images/freecodecamp.svg",
+    icon: "/images/freecodecamp.svg",
     pattern: /^https:\/\/(www\.)?freecodecamp\.org\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "Frontend Mentor",
     value: "frontendmentor",
-    icon: "images/frontendmentor.svg",
+    icon: "/images/frontendmentor.svg",
     pattern: /^https:\/\/(www\.)?frontendmentor\.io\/profile\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "GitLab",
     value: "gitlab",
-    icon: "images/gitlab.svg",
+    icon: "/images/gitlab.svg",
     pattern: /^https:\/\/(www\.)?gitlab\.com\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "Hashnode",
     value: "hashnode",
-    icon: "images/hashnode.svg",
+    icon: "/images/hashnode.svg",
     pattern: /^https:\/\/(www\.)?hashnode\.com\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "Twitter",
     value: "twitter",
-    icon: "images/twitter.svg",
+    icon: "/images/twitter.svg",
     pattern: /^https:\/\/(www\.)?twitter\.com\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "StackOverflow",
     value: "stackoverflow",
-    icon: "images/stackoverflow.svg",
+    icon: "/images/stackoverflow.svg",
     pattern: /^https:\/\/(www\.)?stackoverflow\.com\/users\/[a-zA-Z0-9_-]+$/,
   },
   {
     name: "YouTube",
     value: "youtube",
-    icon: "images/youtube.svg",
+    icon: "/images/youtube.svg",
     pattern:
       /^https:\/\/(www\.)?youtube\.com\/(c|channel|user)\/[a-zA-Z0-9_-]+$/,
   },
@@ -78,7 +78,7 @@ const CustomSelect = ({ value, onChange, name, register }) => {
   const selectedPlatform = platforms.find((p) => p.value === value);
 
   const handleSelect = (platform) => {
-    onChange({ platformName: platform.value, pattern: platform.pattern });
+    onChange({ platformName: platform?.value, pattern: platform?.pattern });
     setIsOpen(false);
   };
 
