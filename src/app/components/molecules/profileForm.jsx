@@ -10,7 +10,7 @@ import Profile from "../icons/profile";
 import Eye from "../icons/eye";
 import { useSignOut } from "react-firebase-hooks/auth";
 import ProtectedRoute from "@/app/page";
-import ProfilePreview from "./profilePReview";
+import ProfilePreview from "./profilePreview";
 import { storage, db, auth } from "@/app/firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { setDoc, doc, getDoc } from "firebase/firestore";
