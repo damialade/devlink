@@ -38,7 +38,7 @@ const ProfileCard = () => {
         let userProfile = null;
         querySnapshot.forEach((doc) => {
           const docData = doc.data();
-          const userId = doc.id; // Get the document ID, or use a custom field if applicable
+          const userId = doc.id;
 
           // Check if the userId from the document matches the `id` from the URL
           if (userId === id) {
