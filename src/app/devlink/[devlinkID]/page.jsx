@@ -22,6 +22,8 @@ const PublicProfileCard = () => {
   };
 
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { devlinkID: id } = useParams();
 
   useEffect(() => {
@@ -35,10 +37,13 @@ const PublicProfileCard = () => {
         if (docSnap.exists()) {
           setData(docSnap.data());
         } else {
-          console.error("No such document!");
+          setError("Profile not found");
         }
       } catch (error) {
+        setError("Error fetching profile.");
         console.error("Error fetching profile:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -50,7 +55,15 @@ const PublicProfileCard = () => {
       <div className="h-72 md:rounded-b-[30px] md:bg-default-purple flex flex-col p-6"></div>
       {/* Profile Card */}
 
-      {data ? (
+      {loading ? (
+        <p className="text-center mt-6 text-default-purple text-lg font-semibold">
+          Loading...
+        </p>
+      ) : error ? (
+        <p className="text-center mt-6 text-default-red text-lg font-semibold">
+          {error}
+        </p>
+      ) : data ? (
         <div className="md:bg-white max-w-sm mx-auto w-full md:rounded-lg md:shadow-lg p-6 block justify-center relative -top-[24rem] md:-top-48 text-center">
           <div className="flex items-center justify-center">
             <div className="relative w-[290px] h-auto rounded-[30px] overflow-hidden text-center pb-8 pt-6">
