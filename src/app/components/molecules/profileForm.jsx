@@ -13,7 +13,9 @@ import ProtectedRoute from "@/app/page";
 import ProfilePreview from "./profilePReview";
 import { storage, db, auth } from "@/app/firebase/config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { useParams } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 const ProfileForm = () => {
   const {
@@ -35,6 +37,12 @@ const ProfileForm = () => {
   const links = watch("links");
 
   const [activeSection, setActiveSection] = useState("links");
+  //Logic to handle form input on preview
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Function to check if all links are valid
   const areLinksValid = () => {
@@ -52,12 +60,24 @@ const ProfileForm = () => {
     append({ ...linksInit.links[0] });
   };
 
-  //Logic to handle form input on preview
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [avatar, setAvatar] = useState([]);
+  //react toast alert function
+  const notify = ({ type, msg }) => {
+    if (type === "Success") {
+      toast.success(msg, {
+        autoClose: 3000,
+        theme: "dark",
+      });
+    }
+    if (type === "Error") {
+      toast.error(msg, {
+        autoClose: 3000,
+        theme: "colored",
+      });
+    }
+  };
 
+  //Form Functions start here
+  //handle image upload to firebase storage
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
       const avatarRef = ref(storage, "images/");
@@ -65,24 +85,48 @@ const ProfileForm = () => {
         .then(() => {
           getDownloadURL(avatarRef).then((avatar) => {
             setAvatar(avatar);
+            setValue("avatar", avatar);
+            notify({
+              type: "Success",
+              msg: "Image uploaded successfully",
+            });
           });
           setAvatar(null);
         })
         .catch((err) => {
-          console.log(err.message);
+          notify({
+            type: "Error",
+            msg: `${err}: Error uploading image`,
+          });
         });
     }
   };
 
-  // Watch fields to update state as they change
+  //get uid from url
+  const { profileID: id } = useParams();
+  // Fetch profile data
   useEffect(() => {
-    setFirstName(watch("firstName"));
-    setLastName(watch("lastName"));
-    setEmail(watch("email"));
-  }, [watch("firstName"), watch("lastName"), watch("email")]);
+    const fetchProfile = async () => {
+      if (id) {
+        const userProfileRef = doc(db, "profiles", id);
+        const userProfileSnap = await getDoc(userProfileRef);
+
+        if (userProfileSnap.exists()) {
+          const data = userProfileSnap.data();
+          setValue("firstName", data?.firstName || "");
+          setValue("lastName", data?.lastName || "");
+          setValue("email", data?.email || "");
+          setValue("avatar", data?.avatar || "");
+          setAvatar(data?.avatar);
+          setValue("links", data?.links);
+        }
+      }
+    };
+
+    fetchProfile();
+  }, [id]);
 
   //Form Saving Logic
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const onSaveClick = async (e) => {
     e.preventDefault();
 
@@ -120,13 +164,27 @@ const ProfileForm = () => {
       if (user) {
         const userProfileRef = doc(db, "profiles", user.uid);
         await setDoc(userProfileRef, profileData);
-        setIsSubmitting(false);
-        alert("Profile saved successfully!");
+        notify({
+          type: "Success",
+          msg: "Profile saved successfully!",
+        });
       }
     } catch (error) {
-      console.error("Error saving profile:", error);
+      notify({
+        type: "Error",
+        msg: `${error}: Unable to save profile information`,
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // Watch fields to update state as they change
+  useEffect(() => {
+    setFirstName(watch("firstName"));
+    setLastName(watch("lastName"));
+    setEmail(watch("email"));
+  }, [watch("firstName"), watch("lastName"), watch("email")]);
 
   //handle sign out
   const [signOut] = useSignOut(auth);
@@ -186,7 +244,7 @@ const ProfileForm = () => {
             <div className="flex space-x-3">
               {/* Preview Button */}
               <div className="flex items-center border border-default-purple py-1 px-2  md:px-3 lg:px-6 rounded-lg hover:bg-disabled-purple">
-                <Link href="/preview">
+                <Link href={`/preview/${id}`}>
                   <span className="hidden md:block text-lg text-default-purple font-medium">
                     Preview
                   </span>
@@ -250,7 +308,7 @@ const ProfileForm = () => {
 
                 {/* Empty State */}
                 {links.length === 0 && (
-                  <div className="mt-10 bg-disabled-gray p-10 rounded-md text-center">
+                  <div className="mt-10 bg-transparent p-10 rounded-md text-center">
                     <div className="flex flex-col items-center">
                       <Image
                         src="/images/getstarted.png"
@@ -311,7 +369,6 @@ const ProfileForm = () => {
                           }}
                           name={`links[${index}].platformName`}
                           register={register}
-                          // {...register(`links[${index}].platformName`)}
                         />
                       </div>
                       <div className="mt-4">
@@ -381,7 +438,7 @@ const ProfileForm = () => {
                     <input
                       type="text"
                       id="firstName"
-                      value={firstName}
+                      defaultValue={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder="e.g. John"
                       {...register("firstName", {
@@ -409,7 +466,7 @@ const ProfileForm = () => {
                     <input
                       type="text"
                       id="lastName"
-                      value={lastName}
+                      defaultValue={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       placeholder="e.g. Briggs"
                       {...register("lastName", {
@@ -437,7 +494,7 @@ const ProfileForm = () => {
                     <input
                       type="email"
                       id="email"
-                      value={email}
+                      defaultValue={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. email@example.com"
                       {...register("email", {
@@ -485,6 +542,7 @@ const ProfileForm = () => {
             )}
           </div>
         </div>
+        <ToastContainer />
       </Fragment>
     </ProtectedRoute>
   );

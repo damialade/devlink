@@ -7,6 +7,7 @@ import Link from "next/link";
 import { auth } from "../firebase/config";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 const CreateAccount = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +23,22 @@ const CreateAccount = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  //react toast alert function
+  const notify = ({ type, msg }) => {
+    if (type === "Success") {
+      toast.success(msg, {
+        autoClose: 3000,
+        theme: "dark",
+      });
+    }
+    if (type === "Error") {
+      toast.error(msg, {
+        autoClose: 3000,
+        theme: "colored",
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,7 +87,6 @@ const CreateAccount = () => {
 
     try {
       await createUserWithEmailAndPassword(formData.email, formData.password);
-      console.log("Account created successfully");
       sessionStorage.setItem("user", true);
       setFormData({
         email: "",
@@ -78,9 +94,18 @@ const CreateAccount = () => {
         confirmPassword: "",
       });
       setErrors({});
-      router.push("/login");
+      notify({
+        type: "Success",
+        msg: "Account Created Successfully",
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 4000);
     } catch (e) {
-      console.error("Error creating account:", e);
+      notify({
+        type: "Error",
+        msg: `${e}: Problem encountered during registration`,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -228,6 +253,7 @@ const CreateAccount = () => {
           </p>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

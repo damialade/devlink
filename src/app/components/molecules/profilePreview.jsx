@@ -18,11 +18,11 @@ const ProfilePreview = ({ firstName, lastName, email, avatar, links }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="relative w-[290px] h-[600px] rounded-[30px] overflow-hidden text-center pb-8 pt-6">
+    <div className="flex items-center justify-center ">
+      <div className="relative w-[290px] h-[1200px] rounded-[30px] overflow-hidden text-center pb-8 pt-6">
         {/* Profile Image */}
 
-        <div className="w-24 h-24 mx-auto mt-6 rounded-full border-4 border-purple-500 overflow-hidden">
+        <div className="w-24 h-24 mx-auto mt-6 rounded-full border-4 border-default-purple overflow-hidden">
           {avatar?.length > 0 && (
             <Image
               src={avatar}

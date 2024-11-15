@@ -14,7 +14,8 @@
     "react": "19.0.0-rc-65a56d0e-20241020",
     "react-dom": "19.0.0-rc-65a56d0e-20241020",
     "react-firebase-hooks": "^5.1.1",
-    "react-hook-form": "^7.53.1"
+    "react-hook-form": "^7.53.1",
+    "react-toastify": "^10.0.6"
   },
   "devDependencies": {
     "eslint": "^8",

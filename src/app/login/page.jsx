@@ -7,8 +7,17 @@ import Password from "../components/icons/pwd";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
+  const notify = ({ type, msg }) => {
+    if (type === "Error") {
+      toast.error(msg, {
+        autoClose: 3000,
+        theme: "colored",
+      });
+    }
+  };
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -59,18 +68,24 @@ const Login = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(formData.email, formData.password);
-      if (user) {
+      const result = await signInWithEmailAndPassword(
+        formData.email,
+        formData.password
+      );
+      if (result?.user) {
         sessionStorage.setItem("user", true);
         setFormData({
           email: "",
           password: "",
         });
         setErrors({});
-        router.push("/profile");
+        router.push(`/profile/${result?.user?.uid}`);
       }
     } catch (e) {
-      console.error("Error logging into account:", e);
+      notify({
+        type: "Error",
+        msg: `${e.message}: Error logging into account`,
+      });
     }
   };
 
