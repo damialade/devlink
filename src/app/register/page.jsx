@@ -3,9 +3,11 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import Email from "../components/icons/email";
 import Password from "../components/icons/pwd";
+import Link from "next/link";
 import { auth } from "../firebase/config";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 const CreateAccount = () => {
   const [formData, setFormData] = useState({
@@ -15,12 +17,28 @@ const CreateAccount = () => {
   });
 
   const router = useRouter();
-  const [createUserWithEmailAndPassword, user, error] =
+  const [createUserWithEmailAndPassword, user, _, error] =
     useCreateUserWithEmailAndPassword(auth);
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  //react toast alert function
+  const notify = ({ type, msg }) => {
+    if (type === "Success") {
+      toast.success(msg, {
+        autoClose: 3000,
+        theme: "dark",
+      });
+    }
+    if (type === "Error") {
+      toast.error(msg, {
+        autoClose: 3000,
+        theme: "colored",
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +87,6 @@ const CreateAccount = () => {
 
     try {
       await createUserWithEmailAndPassword(formData.email, formData.password);
-      console.log("Account created successfully");
       sessionStorage.setItem("user", true);
       setFormData({
         email: "",
@@ -77,9 +94,18 @@ const CreateAccount = () => {
         confirmPassword: "",
       });
       setErrors({});
-      router.push("/login");
+      notify({
+        type: "Success",
+        msg: "Account Created Successfully",
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 4000);
     } catch (e) {
-      console.error("Error creating account:", e);
+      notify({
+        type: "Error",
+        msg: `${e}: Problem encountered during registration`,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -212,7 +238,22 @@ const CreateAccount = () => {
             </button>
           </div>
         </form>
+        {/* Error message */}
+        {error && (
+          <p className="text-default-red text-sm mt-4">
+            {error || "Problems Creating Account"}
+          </p>
+        )}
+        <div className="text-center my-4">
+          <p className="text-default-gray">
+            Already a user!{" "}
+            <Link href="/login">
+              <span className="text-default-purple">Sign In Here</span>
+            </Link>
+          </p>
+        </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -2,22 +2,33 @@
 import Image from "next/image";
 import { useState } from "react";
 import Email from "../components/icons/email";
+import Link from "next/link";
 import Password from "../components/icons/pwd";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
+  const notify = ({ type, msg }) => {
+    if (type === "Error") {
+      toast.error(msg, {
+        autoClose: 3000,
+        theme: "colored",
+      });
+    }
+  };
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const router = useRouter();
-  const [signInWithEmailAndPassword, error] =
+  const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState({});
+  const router = useRouter();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -57,17 +68,24 @@ const Login = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(formData.email, formData.password);
-      console.log("Login successful");
-      sessionStorage.setItem("user", true);
-      setFormData({
-        email: "",
-        password: "",
-      });
-      setErrors({});
-      router.push("/profile");
+      const result = await signInWithEmailAndPassword(
+        formData.email,
+        formData.password
+      );
+      if (result?.user) {
+        sessionStorage.setItem("user", true);
+        setFormData({
+          email: "",
+          password: "",
+        });
+        setErrors({});
+        router.push(`/profile/${result?.user?.uid}`);
+      }
     } catch (e) {
-      console.error("Error logging into account:", e);
+      notify({
+        type: "Error",
+        msg: `${e.message}: Error logging into account`,
+      });
     }
   };
 
@@ -162,7 +180,7 @@ const Login = () => {
                   : "bg-disabled-purple cursor-not-allowed"
               }`}
             >
-              Login
+              {loading ? "Please Wait..." : "Login"}
             </button>
           </div>
         </form>
@@ -170,9 +188,18 @@ const Login = () => {
         {/* Error message */}
         {error && (
           <p className="text-default-red text-sm mt-4">
-            {error.message || "Error creating account. Please try again."}
+            Invalid Credentials. Please try again.
           </p>
         )}
+
+        <div className="text-center my-4">
+          <p className="text-default-gray">
+            Dont have an account!{" "}
+            <Link href="/register">
+              <span className="text-default-purple">Sign Up Here</span>
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

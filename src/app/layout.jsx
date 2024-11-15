@@ -1,5 +1,6 @@
 import { Jost } from "next/font/google";
 import "./styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const jost = Jost({ subsets: ["latin"] });
 
