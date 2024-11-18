@@ -180,15 +180,11 @@ const ProfileForm = () => {
   };
 
   // Watch fields to update state as they change
-  const firstNameValue = watch("firstName");
-  const lastNameValue = watch("lastName");
-  const emailValue = watch("email");
-
   useEffect(() => {
-    setFirstName(firstNameValue);
-    setLastName(lastNameValue);
-    setEmail(emailValue);
-  }, [firstNameValue, lastNameValue, emailValue]);
+    setFirstName(watch("firstName"));
+    setLastName(watch("lastName"));
+    setEmail(watch("email"));
+  }, [watch("firstName"), watch("lastName"), watch("email")]);
 
   //handle sign out
   const [signOut] = useSignOut(auth);
