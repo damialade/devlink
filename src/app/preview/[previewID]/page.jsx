@@ -55,7 +55,7 @@ const ProfileCard = () => {
 
       fetchData();
     }
-  }, [id]);
+  }, [id, data?.length]);
 
   //react toast alert function
   const notify = ({ type, msg }) => {
