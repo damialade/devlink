@@ -9,7 +9,7 @@ const NotFound = () => {
           Page Not Found
         </p>
         <p className="md:text-lg lg:text-xl text-gray-600 mt-8">
-          Sorry, the page you are looking for could not be found.
+          Oops! It looks like aliens abducted this page.
         </p>
         <Link
           href="/"
