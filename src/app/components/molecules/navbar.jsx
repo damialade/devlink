@@ -19,7 +19,7 @@ const Navbar = () => {
             priority
           />
           <h2 className="font-bold text-app-dark text-4xl hidden md:block">
-            DevLinks
+            DevLinkShare
           </h2>
         </div>
 
