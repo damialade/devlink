@@ -1,7 +1,7 @@
 import ProfileForm from "@/app/components/molecules/profileForm";
 
 export const metadata = {
-  title: "DevLink | Profile",
+  title: "DevLinkShare | Profile",
 };
 
 const Profile = () => {

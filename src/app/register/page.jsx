@@ -130,7 +130,7 @@ const CreateAccount = () => {
             height={64}
             priority
           />
-          <h2 className="font-bold text-app-dark text-4xl">DevLinks</h2>
+          <h2 className="font-bold text-app-dark text-4xl">DevLinkShare</h2>
         </div>
 
         <div className="text-left mb-6">

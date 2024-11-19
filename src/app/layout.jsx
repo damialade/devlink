@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 const jost = Jost({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "DevLink",
+  title: "DevLinkShare",
   description: "A fully-functional link-sharing app for developers!",
 };
 
